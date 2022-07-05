@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+        <title>Task List</title>
+      </head>
+    <body class="h-screen bg-gradient-to-b from-green-200 to-green-500 text-center
+     flex flex-col items-center">
+        <form onsubmit="addTask(event)" autocomplete="off" class="text-center mt-10">
+            <input type="text" name="task" id="taskDesc"
+            class="p-2 border border-blue-500 rounded " />
+
+            <input type="submit" name="action" value="New"
+            class="p-2 bg-blue-800 text-white"/>
+        </form>
+       <div class=" text-blue-700 p-10 text-center w-full flex flex-col items-center">
+            <% for(let i = 0; i < taskList.length; i++){ %>
+
+                <p class="mb-10 bg-white p-3 rounded w-full md:w-full md:max-w-lg 
+               " >
+                    <%= taskList[i] %> 
+                    | <a class="mr-11"
+                    href="/delete/<%=i%>/<%=taskList[i]%>/"> x </a>
+                </p>
+            <% } %>
+       </div>
+    </body>
+
+
+
+    <script>
+        async function addTask(event){
+            event.preventDefault();
+            let newTask = document.getElementById("taskDesc").value;
+
+            let _data={
+                task: newTask
+            }
+
+            if(newTask == ''){
+                alert('Write something')
+            }else{
+                await fetch("http://localhost:3000/post",{
+                    method: "POST",
+                    body: JSON.stringify(_data),
+                    headers: { "Content-type": "application/json; charset=UTF-8" },
+                }).then(()=>{
+                    window.location.reload();
+                    document.getElementById("taskDesc").value = '';
+                })
+            }
+            }
+    </script>
+</html>
